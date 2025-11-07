@@ -14,15 +14,6 @@ jobs:
     steps:
     - uses: actions/checkout@v4
 
-    - name: Generate Docker metadata
-      id: meta
-      uses: docker/metadata-action@v3
-      with:
-        images: |
-            ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
-        tags: |
-            type=ref,event=branch
-
     - name: Set up QEMU
       uses: docker/setup-qemu-action@v3
 
@@ -34,6 +25,16 @@ jobs:
 
     - name: Verify Docker BuildX Version
       run: docker buildx version
+
+
+    - name: Generate Docker metadata
+      id: meta
+      uses: docker/metadata-action@v3
+      with:
+        images: |
+            ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+        tags: |
+            type=ref,event=branch
 
     - name: Create a new builder instance
       run: docker buildx create --use --name insecure-builder --buildkitd-flags '--allow-insecure-entitlement security.insecure'
